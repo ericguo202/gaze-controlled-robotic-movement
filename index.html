@@ -21,7 +21,6 @@
         // open connection
         socket.addEventListener("open", (event) => {
             socket.send("Connected to server! Port 8765");
-            webgazer.begin();
         });
 
         // listen for messages from server
@@ -38,6 +37,14 @@
         });
 
         // test
+
+        webgazer.setGazeListener((data, elapsedTime) => {
+            if (data && socket.readyState === WebSocket.OPEN) {
+                console.log({ x: data.x, y: data.y, t: elapsedTime });
+                socket.send({ x: data.x, y: data.y, t: elapsedTime });
+            }
+        }).begin();
+
         const button = document.getElementById("b");
         button.addEventListener("click", (event) => {
             socket.send("Button was clicked.");
