@@ -5,13 +5,58 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Websocket Test</title>
+    <style>
+        body {
+            font-size: 0;
+            margin: 0;
+        }
+
+        div {
+            display: inline-block;
+            border: 1px solid black;
+            box-sizing: border-box;
+            font-size: 30px;
+            text-align: center;
+            overflow: hidden;
+            /* this prevents weird overflow of divs */
+        }
+
+        #left {
+            height: 100vh;
+            width: 25%;
+            background-color: aliceblue;
+        }
+
+        #middle {
+            height: 100vh;
+            width: 50%;
+            background-color: palegoldenrod;
+            border: 0;
+        }
+
+        #right {
+            height: 100vh;
+            width: 25%;
+            background-color: palevioletred;
+        }
+
+        #mt,
+        #mb {
+            display: block;
+            border: 1px solid black;
+            box-sizing: border-box;
+            height: 50vh;
+        }
+    </style>
 </head>
 
 <body>
-    <h1>test test 2</h1>
-    <div style="text-align: center;">
-        <button id="b">Click me!</button>
+    <div id="left">LEFT</div>
+    <div id="middle">
+        <div id="mt">UP</div>
+        <div id="mb">DOWN</div>
     </div>
+    <div id="right">RIGHT</div>
     <script src="https://webgazer.cs.brown.edu/webgazer.js"></script> <!--Webgazer.js script-->
     <!--Websocket script with webgazer-->
     <script>
@@ -44,12 +89,6 @@
                 socket.send({ x: data.x, y: data.y, t: elapsedTime });
             }
         }).begin();
-
-        const button = document.getElementById("b");
-        button.addEventListener("click", (event) => {
-            socket.send("Button was clicked.");
-            webgazer.end();
-        });
 
     </script>
 </body>
