@@ -47,14 +47,47 @@
             console.log("Connection closed.");
         });
 
+        function determineQuadrant(gaze) {
+            // returns: if LEFT -1, if RIGHT 1, if DOWN -2, if UP 2
+            if (gaze.x <= 0.25) {
+                console.log("LEFT");
+                return -1;
+            }
+            else if (gaze.x >= 0.75) {
+                console.log("RIGHT");
+                return 1;
+            }
+            else {
+                if (gaze.y <= 0.5) {
+                    console.log("UP");
+                    return 2;
+                }
+                else {
+                    console.log("DOWN");
+                    return -2;
+                }
+            }
+        }
+
         // test
 
+        let gaze = null;
+
         webgazer.setGazeListener((data, elapsedTime) => {
-            if (data && socket.readyState === WebSocket.OPEN) {
-                console.log({ x: data.x, y: data.y, t: elapsedTime });
-                socket.send({ x: data.x, y: data.y, t: elapsedTime });
+            if (data) {
+                // dividing the raw coordinates (in pixels) by window.innerWidth and window.innerHeight normalizes these coordinates
+                // this way, we can test on a variety of screen and viewport sizes.
+                gaze = { x: data.x / window.innerWidth, y: data.y / window.innerHeight, t: elapsedTime };
             }
         }).begin();
+
+        // webgazer collects data way too frequently, so we'll poll every second (1000 ms)
+        setInterval(() => {
+            if (gaze && socket.readyState === WebSocket.OPEN) {
+                console.log(gaze);
+                socket.send(JSON.stringify({ ...gaze, direction: determineQuadrant(gaze) })); // sends to server
+            }
+        }, 1000);
 
     </script>
 </body>
