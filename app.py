@@ -1,10 +1,12 @@
 import asyncio
 import websockets
-
+from robot import *
+from robot import main as main2
 async def handle_connection(websocket):
     print("Client connected.")
     async for message in websocket:
         print(f"Received message: {message}")
+        main2(message)
         await websocket.send("Got it.")
 
 async def main():

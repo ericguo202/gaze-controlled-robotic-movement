@@ -31,11 +31,11 @@ function determineQuadrant(gaze) {
     }
     else {
         if (gaze.y <= 0.5) {
-            console.log("UP");
+            console.log("FORWARD");
             return 2;
         }
         else {
-            console.log("DOWN");
+            console.log("BACKWARD");
             return -2;
         }
     }
@@ -57,6 +57,6 @@ webgazer.setGazeListener((data, elapsedTime) => {
 setInterval(() => {
     if (gaze && socket.readyState === WebSocket.OPEN) {
         console.log(gaze);
-        socket.send(JSON.stringify({ ...gaze, direction: determineQuadrant(gaze) })); // sends to server
+        socket.send(determineQuadrant(gaze)); // sends to server
     }
 }, 1000);
