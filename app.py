@@ -1,14 +1,14 @@
 import asyncio
 import websockets
-# from robot import *
-# from robot import initialize_robot, move_robot
-
+from robot import *
+from robot import main as main1
+from robot import main2 as main2
 async def handle_connection(websocket):
     print("Client connected.")
-    # move_group, listener = initialize_robot()
+    move_group, listener = main1()
     async for message in websocket:
-        print(f"Received message: {message} with type {type(message)}")
-        # move_robot(message, move_group, listener)
+        print(f"Received message: {message}")
+        main2(message, move_group, listener)
         await websocket.send("Got it.")
 
 async def main():
@@ -18,4 +18,3 @@ async def main():
 
 if __name__ == "__main__": # starts server
     asyncio.run(main())
-

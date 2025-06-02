@@ -3,7 +3,7 @@ const socket = new WebSocket("ws://localhost:8765");
 
 // open connection
 socket.addEventListener("open", (event) => {
-    socket.send("Connected to server! Port 8765");
+    console.log("Connected to server! Port 8765");
 });
 
 // listen for messages from server

@@ -18,6 +18,7 @@ from franka_msgs.srv import SetFullCollisionBehavior, SetFullCollisionBehaviorRe
 from visualization_msgs.msg import Marker
 import random
 import csv
+import time
 
 seventh_joint = 0
 wrench_force_z = 0
@@ -31,6 +32,8 @@ def wrench_callback(msg):
     wrench_force_z = msg.wrench.force.z
 
 
+
+
 def move_down(move_group):
     move_group.set_start_state_to_current_state()
     start_pose = move_group.get_current_pose().pose
@@ -39,7 +42,10 @@ def move_down(move_group):
     end_effector_pose.position.x = start_pose.position.x
     end_effector_pose.position.y = start_pose.position.y
     end_effector_pose.position.z = start_pose.position.z-.0075
-    end_effector_pose.orientation = start_pose.orientation           
+    end_effector_pose.orientation = start_pose.orientation
+
+
+            
 
     move_group.set_pose_target(end_effector_pose)
     plan = move_group.plan()
@@ -47,6 +53,7 @@ def move_down(move_group):
     move_group.execute(plan_traj, wait=True)
     move_group.stop()
     move_group.clear_pose_targets()
+    print("moved down")
 def move_backward(move_group):
     move_group.set_start_state_to_current_state()
     start_pose = move_group.get_current_pose().pose
@@ -56,13 +63,17 @@ def move_backward(move_group):
     end_effector_pose.position.y = start_pose.position.y+.0075
     end_effector_pose.position.z = start_pose.position.z
     end_effector_pose.orientation = start_pose.orientation
+
+
             
+
     move_group.set_pose_target(end_effector_pose)
     plan = move_group.plan()
     plan_traj = plan[1]
     move_group.execute(plan_traj, wait=True)
     move_group.stop()
     move_group.clear_pose_targets()
+    print("moved backward")
 def move_left(move_group):
     move_group.set_start_state_to_current_state()
     start_pose = move_group.get_current_pose().pose
@@ -73,12 +84,16 @@ def move_left(move_group):
     end_effector_pose.position.z = start_pose.position.z
     end_effector_pose.orientation = start_pose.orientation
 
+
+            
+
     move_group.set_pose_target(end_effector_pose)
     plan = move_group.plan()
     plan_traj = plan[1]
     move_group.execute(plan_traj, wait=True)
     move_group.stop()
     move_group.clear_pose_targets()
+    print("moved left")
 def move_right(move_group):
     move_group.set_start_state_to_current_state()
     start_pose = move_group.get_current_pose().pose
@@ -89,12 +104,16 @@ def move_right(move_group):
     end_effector_pose.position.z = start_pose.position.z
     end_effector_pose.orientation = start_pose.orientation
 
+
+            
+
     move_group.set_pose_target(end_effector_pose)
     plan = move_group.plan()
     plan_traj = plan[1]
     move_group.execute(plan_traj, wait=True)
     move_group.stop()
     move_group.clear_pose_targets()
+    print("moved right")
 
 def move_forward(move_group):
     move_group.set_start_state_to_current_state()
@@ -106,12 +125,16 @@ def move_forward(move_group):
     end_effector_pose.position.z = start_pose.position.z
     end_effector_pose.orientation = start_pose.orientation
 
+
+            
+
     move_group.set_pose_target(end_effector_pose)
     plan = move_group.plan()
     plan_traj = plan[1]
     move_group.execute(plan_traj, wait=True)
     move_group.stop()
     move_group.clear_pose_targets()
+    print("moved forward")
 
 # def gripper_open(move_group):
 #             gripper.set_joint_value_target(hand_open)
@@ -126,8 +149,7 @@ def move_forward(move_group):
 #             plan_traj = plan[1]
 #             gripper.execute(plan_traj, wait=True)
 #             gripper.stop()
-
-def main(value):
+def main():
     rospy.init_node('set_full_collision_behavior')
     moveit_commander.roscpp_initialize(sys.argv)
     robot = moveit_commander.RobotCommander()
@@ -148,7 +170,11 @@ def main(value):
     start_pose = move_group.get_current_pose().pose
     joint_home = [-0.0002249274015897828, -0.7846473935524318, 4.74312715691906e-06, -2.3559378868236878, -0.0007421279900396864, 1.571840799410771, 0.78462253368357]
     rospy.wait_for_service('/franka_control/set_full_collision_behavior')
-    
+    return move_group, listener
+
+def main2(value, move_group, listener):
+
+        
     if not rospy.is_shutdown():
 
             set_collision_behavior_service = rospy.ServiceProxy('/franka_control/set_full_collision_behavior', SetFullCollisionBehavior)
@@ -191,6 +217,9 @@ def main(value):
             arm_pose.position.y = trans2[1]
             arm_pose.position.z = (trans2[2])
 
+
+            print("value: " +  value)
+
             if int(value) == 1:
                 move_right(move_group)
             elif int(value) ==2:
@@ -200,7 +229,18 @@ def main(value):
             elif int(value) == -2:
                 move_backward(move_group)
 
+
+
+
+
+ 
             rospy.loginfo("############## Task completed! ##############")
 
+
+
+
 if __name__ == '__main__':
-    main()
+    move_group, listener = main()
+    main2("1",move_group, listener)
+    time.sleep(1)
+    main2("2",move_group, listener)
