@@ -31,8 +31,6 @@ def wrench_callback(msg):
     wrench_force_z = msg.wrench.force.z
 
 
-
-
 def move_down(move_group):
     move_group.set_start_state_to_current_state()
     start_pose = move_group.get_current_pose().pose
@@ -41,10 +39,7 @@ def move_down(move_group):
     end_effector_pose.position.x = start_pose.position.x
     end_effector_pose.position.y = start_pose.position.y
     end_effector_pose.position.z = start_pose.position.z-.0075
-    end_effector_pose.orientation = start_pose.orientation
-
-
-            
+    end_effector_pose.orientation = start_pose.orientation           
 
     move_group.set_pose_target(end_effector_pose)
     plan = move_group.plan()
@@ -61,10 +56,7 @@ def move_backward(move_group):
     end_effector_pose.position.y = start_pose.position.y+.0075
     end_effector_pose.position.z = start_pose.position.z
     end_effector_pose.orientation = start_pose.orientation
-
-
             
-
     move_group.set_pose_target(end_effector_pose)
     plan = move_group.plan()
     plan_traj = plan[1]
@@ -81,9 +73,6 @@ def move_left(move_group):
     end_effector_pose.position.z = start_pose.position.z
     end_effector_pose.orientation = start_pose.orientation
 
-
-            
-
     move_group.set_pose_target(end_effector_pose)
     plan = move_group.plan()
     plan_traj = plan[1]
@@ -99,9 +88,6 @@ def move_right(move_group):
     end_effector_pose.position.y = start_pose.position.y
     end_effector_pose.position.z = start_pose.position.z
     end_effector_pose.orientation = start_pose.orientation
-
-
-            
 
     move_group.set_pose_target(end_effector_pose)
     plan = move_group.plan()
@@ -120,9 +106,6 @@ def move_forward(move_group):
     end_effector_pose.position.z = start_pose.position.z
     end_effector_pose.orientation = start_pose.orientation
 
-
-            
-
     move_group.set_pose_target(end_effector_pose)
     plan = move_group.plan()
     plan_traj = plan[1]
@@ -130,21 +113,21 @@ def move_forward(move_group):
     move_group.stop()
     move_group.clear_pose_targets()
 
-def gripper_open(move_group):
-            gripper.set_joint_value_target(hand_open)
-            plan = gripper.plan()
-            plan_traj = plan[1]
-            gripper.execute(plan_traj, wait=True)
-            gripper.stop()
+# def gripper_open(move_group):
+#             gripper.set_joint_value_target(hand_open)
+#             plan = gripper.plan()
+#             plan_traj = plan[1]
+#             gripper.execute(plan_traj, wait=True)
+#             gripper.stop()
 
-def gripper_close(move_group):
-            gripper.set_joint_value_target(hand_close)
-            plan = gripper.plan()
-            plan_traj = plan[1]
-            gripper.execute(plan_traj, wait=True)
-            gripper.stop()
+# def gripper_close(move_group):
+#             gripper.set_joint_value_target(hand_close)
+#             plan = gripper.plan()
+#             plan_traj = plan[1]
+#             gripper.execute(plan_traj, wait=True)
+#             gripper.stop()
 
-def main():
+def main(value):
     rospy.init_node('set_full_collision_behavior')
     moveit_commander.roscpp_initialize(sys.argv)
     robot = moveit_commander.RobotCommander()
@@ -165,10 +148,9 @@ def main():
     start_pose = move_group.get_current_pose().pose
     joint_home = [-0.0002249274015897828, -0.7846473935524318, 4.74312715691906e-06, -2.3559378868236878, -0.0007421279900396864, 1.571840799410771, 0.78462253368357]
     rospy.wait_for_service('/franka_control/set_full_collision_behavior')
-    while not rospy.is_shutdown():
+    
+    if not rospy.is_shutdown():
 
-
-        try:
             set_collision_behavior_service = rospy.ServiceProxy('/franka_control/set_full_collision_behavior', SetFullCollisionBehavior)
             lower_torque = [20.0,20.0,20.0,20.0,20.0,12.0,12.0]
             lower_force = [20.0,20.0,20.0,20.0,20.0,15.0]
@@ -209,22 +191,16 @@ def main():
             arm_pose.position.y = trans2[1]
             arm_pose.position.z = (trans2[2])
 
-
-
-            if value = 1:
-                move_down(move_group)
-            elif value = 2:
-                move_up(move_group)
-
-
+            if int(value) == 1:
+                move_right(move_group)
+            elif int(value) ==2:
+                move_forward(move_group)
+            elif int(value) == -1:
+                move_left(move_group)
+            elif int(value) == -2:
+                move_backward(move_group)
 
             rospy.loginfo("############## Task completed! ##############")
-
-        except rospy.ROSInterruptException:
-            return
-        except KeyboardInterrupt:
-            return
-
 
 if __name__ == '__main__':
     main()
