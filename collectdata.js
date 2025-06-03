@@ -57,8 +57,14 @@ webgazer.setGazeListener((data, elapsedTime) => {
 const endCalibrationButton = document.getElementById("endcalibration");
 
 endCalibrationButton.addEventListener("click", (event) => {
-    endCalibration = true;
-    endCalibrationButton.disabled = true;
+    if (!endCalibration) {
+        endCalibration = true;
+        endCalibrationButton.textContent = "End Data Collection";
+    }
+    else {
+        endCalibration = false;
+        endCalibrationButton.textContent = "End Calibration";
+    }
 })
 
 // webgazer collects data way too frequently, so we'll poll every second (1000 ms)
