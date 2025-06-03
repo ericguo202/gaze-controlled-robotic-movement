@@ -222,7 +222,7 @@ def main2(value, move_group, listener):
 
             if int(value) == 1:
                 move_right(move_group)
-            elif int(value) ==2:
+            elif int(value) == 2:
                 move_forward(move_group)
             elif int(value) == -1:
                 move_left(move_group)

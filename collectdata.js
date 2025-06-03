@@ -42,6 +42,7 @@ function determineQuadrant(gaze) {
 }
 
 // test
+let endCalibration = false; // default state is calibration
 
 let gaze = null;
 
@@ -53,9 +54,16 @@ webgazer.setGazeListener((data, elapsedTime) => {
     }
 }).begin();
 
+const endCalibrationButton = document.getElementById("endcalibration");
+
+endCalibrationButton.addEventListener("click", (event) => {
+    endCalibration = true;
+    endCalibrationButton.disabled = true;
+})
+
 // webgazer collects data way too frequently, so we'll poll every second (1000 ms)
 setInterval(() => {
-    if (gaze && socket.readyState === WebSocket.OPEN) {
+    if (gaze && socket.readyState === WebSocket.OPEN && endCalibration) {
         console.log(gaze);
         socket.send(determineQuadrant(gaze)); // sends to server
     }
