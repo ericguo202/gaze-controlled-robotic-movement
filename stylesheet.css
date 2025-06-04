@@ -45,49 +45,8 @@ body {
     background-color: lavender;
 }
 
+/* gets rid of video */
+
 #webgazerVideoContainer {
     display: none !important;
 }
-
-/* #left {
-    background-color: aliceblue;
-    width: 25%;
-}
-
-#middle {
-    background-color: bisque;
-    width: 50%;
-    display: flex;
-    flex-direction: column;
-}
-
-#mt,
-#mb {
-    width: 100%;
-    border: none;
-}
-
-#mt {
-    height: 50%;
-    border-bottom: 1px solid black;
-}
-
-#mb {
-    height: 50%;
-    border-top: 1px solid black;
-}
-
-#right {
-    background-color: darkseagreen;
-    width: 25%;
-}
-
-#left,
-#mb,
-#mt,
-#right {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-wrap: wrap;
-} */

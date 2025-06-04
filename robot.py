@@ -54,6 +54,28 @@ def move_down(move_group):
     move_group.stop()
     move_group.clear_pose_targets()
     print("moved down")
+
+def move_up(move_group):
+    move_group.set_start_state_to_current_state()
+    start_pose = move_group.get_current_pose().pose
+
+    end_effector_pose = geometry_msgs.msg.Pose()
+    end_effector_pose.position.x = start_pose.position.x
+    end_effector_pose.position.y = start_pose.position.y
+    end_effector_pose.position.z = start_pose.position.z+.0075
+    end_effector_pose.orientation = start_pose.orientation
+
+
+            
+
+    move_group.set_pose_target(end_effector_pose)
+    plan = move_group.plan()
+    plan_traj = plan[1]
+    move_group.execute(plan_traj, wait=True)
+    move_group.stop()
+    move_group.clear_pose_targets()
+    print("moved up")
+
 def move_backward(move_group):
     move_group.set_start_state_to_current_state()
     start_pose = move_group.get_current_pose().pose
@@ -74,6 +96,7 @@ def move_backward(move_group):
     move_group.stop()
     move_group.clear_pose_targets()
     print("moved backward")
+
 def move_left(move_group):
     move_group.set_start_state_to_current_state()
     start_pose = move_group.get_current_pose().pose
@@ -94,6 +117,7 @@ def move_left(move_group):
     move_group.stop()
     move_group.clear_pose_targets()
     print("moved left")
+
 def move_right(move_group):
     move_group.set_start_state_to_current_state()
     start_pose = move_group.get_current_pose().pose
@@ -230,13 +254,10 @@ def main2(value, move_group, listener):
                 move_backward(move_group)
             elif int(value) == -3:
                 move_down(move_group)
+            elif int(value) == 3:
+                move_up(move_group)
 
 
-
-
-
-
- 
             rospy.loginfo("############## Task completed! ##############")
 
 
