@@ -23,32 +23,32 @@ function determineQuadrant(gaze) {
     // returns: if LEFT -1, if RIGHT 1, if DOWN -2, if UP 2
     if (gaze.x <= (1 / 3)) {
         if (gaze.y >= 0.5) {
-            console.log("LEFT");
-            return -1;
-        }
-        else {
             console.log("RIGHT");
             return 1;
+        }
+        else {
+            console.log("LEFT");
+            return -1;
         }
     }
     else if (gaze.x >= (2 / 3)) {
         if (gaze.y >= 0.5) {
-            console.log("UP");
-            return 3;
-        }
-        else {
             console.log("DOWN");
             return -3;
+        }
+        else {
+            console.log("UP");
+            return 3;
         }
     }
     else {
         if (gaze.y >= 0.5) {
-            console.log("FORWARD");
-            return 2;
-        }
-        else {
             console.log("BACKWARD");
             return -2;
+        }
+        else {
+            console.log("FORWARD");
+            return 2;
         }
     }
 }
