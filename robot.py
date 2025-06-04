@@ -228,6 +228,9 @@ def main2(value, move_group, listener):
                 move_left(move_group)
             elif int(value) == -2:
                 move_backward(move_group)
+            elif int(value) == -3:
+                move_down(move_group)
+
 
 
 
