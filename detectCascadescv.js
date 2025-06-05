@@ -2,6 +2,8 @@ const video = document.getElementById('video');
 const canvas = document.getElementById('canvas');
 const ctx = canvas.getContext('2d');
 const statusEl = document.getElementById('status');
+let isAppInit = false;
+const dataArr = [];
 
 async function initCamera() {
     const stream = await navigator.mediaDevices.getUserMedia({ video: true });
@@ -17,8 +19,12 @@ const CASCADES = {
 async function loadClassifier(name, file) {
     const { local, remote } = CASCADES[name];
     let buf;
-    try { buf = await (await fetch(local)).arrayBuffer(); }
-    catch { buf = await (await fetch(remote)).arrayBuffer(); }
+    try {
+        buf = await (await fetch(local)).arrayBuffer();
+    }
+    catch {
+        buf = await (await fetch(remote)).arrayBuffer();
+    }
     cv.FS_createDataFile('/', file, new Uint8Array(buf), true, false, false);
     const cc = new cv.CascadeClassifier();
     if (!cc.load(file)) throw new Error(`${name} cascade failed`);
@@ -29,7 +35,10 @@ let faceCascade, eyeCascade, src, gray;
 const MISS = 6, seen = { L: MISS, R: MISS };
 
 function processFrame() {
-    if (video.readyState < 2) { requestAnimationFrame(processFrame); return; }
+    if (video.readyState < 2) {
+        requestAnimationFrame(processFrame);
+        return;
+    }
 
     ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
     src.data.set(ctx.getImageData(0, 0, src.cols, src.rows).data);
@@ -57,13 +66,36 @@ function processFrame() {
 
     ['L', 'R'].forEach(s => { hit[s] ? seen[s] = MISS : seen[s] > 0 && seen[s]--; });
 
-    const leftOpen = seen.L > 0, rightOpen = seen.R > 0;
-    statusEl.textContent = leftOpen && rightOpen ? 'NONE CLOSED'
-        : !leftOpen && !rightOpen ? 'BOTH CLOSED'
-            : !leftOpen ? 'LEFT CLOSED' : 'RIGHT CLOSED';
+    const leftOpen = seen.L > 0;
+    const rightOpen = seen.R > 0;
+
+    // determines if left and right open or closed
+    if (leftOpen && rightOpen) {
+        console.log('NONE CLOSED');
+        statusEl.textContent = 'NONE CLOSED';
+        dataArr.push(0);
+    }
+    else if (!leftOpen && !rightOpen) {
+        console.log('BOTH CLOSED');
+        statusEl.textContent = 'BOTH CLOSED';
+        dataArr.push(5);
+    }
+    else {
+        if (!leftOpen) {
+            console.log('LEFT CLOSED');
+            statusEl.textContent = 'LEFT CLOSED';
+            dataArr.push(4);
+        }
+        else {
+            console.log('RIGHT CLOSED');
+            statusEl.textContent = 'RIGHT CLOSED';
+            dataArr.push(-4);
+        }
+    }
 
     cv.imshow('canvas', src);
-    faces.delete(); eyes.delete();
+    faces.delete();
+    eyes.delete();
     requestAnimationFrame(processFrame);
 }
 
@@ -81,6 +113,8 @@ async function initApp() {
         src = new cv.Mat(video.videoHeight, video.videoWidth, cv.CV_8UC4);
         gray = new cv.Mat(video.videoHeight, video.videoWidth, cv.CV_8UC1);
 
+        isAppInit = true;
+        console.log("App init");
         statusEl.textContent = 'Detecting eyes…';
         requestAnimationFrame(processFrame);
     } catch (err) {
@@ -88,3 +122,10 @@ async function initApp() {
         statusEl.textContent = '🚫 ' + err.message;
     }
 }
+
+setInterval(() => {
+    if (isAppInit && dataArr.length > 0) {
+        console.log(dataArr[dataArr.length - 1]);
+        dataArr.splice(0, dataArr.length);
+    }
+}, 1500);
