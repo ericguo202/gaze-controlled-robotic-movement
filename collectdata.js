@@ -20,7 +20,7 @@ socket.addEventListener("close", (event) => {
 });
 
 function determineQuadrant(gaze) {
-    // returns: if LEFT -1, if RIGHT 1, if DOWN -2, if UP 2
+    // returns: if LEFT -1, if RIGHT 1, if DOWN -3, if UP 3, if FORWARD 2 if BACKWARD -2
     if (gaze.x <= (1 / 3)) {
         if (gaze.y >= 0.5) {
             console.log("RIGHT");
