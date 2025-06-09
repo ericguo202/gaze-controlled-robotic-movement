@@ -81,17 +81,16 @@ endCalibrationButton.addEventListener("click", (event) => {
 
 // webgazer collects data way too frequently, so we'll poll every 2 seconds (2000 ms)
 setInterval(() => {
-    if (gaze && socket.readyState === WebSocket.OPEN && endCalibration) {
-        console.log(gaze);
-        socket.send(determineQuadrant(gaze)); // sends to server
+    if (socket.readyState === WebSocket.OPEN && endCalibration) {
+        if (gaze) {
+            console.log(gaze);
+            socket.send(determineQuadrant(gaze)); // sends to server
+        }
+        if (isAppInit && dataArr.length > 0) {
+            const cascade = dataArr[dataArr.length - 1];
+            console.log(`Cascade detector: ${cascade}`);
+            socket.send(cascade);
+            dataArr.splice(0, dataArr.length);
+        }
     }
 }, 2000);
-
-setInterval(() => {
-    if (isAppInit && dataArr.length > 0) {
-        const cascade = dataArr[dataArr.length - 1];
-        console.log(`Cascade detector: ${cascade}`);
-        socket.send(cascade);
-        dataArr.splice(0, dataArr.length);
-    }
-}, 1500);

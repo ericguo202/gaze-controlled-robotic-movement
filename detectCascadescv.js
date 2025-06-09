@@ -122,10 +122,3 @@ async function initApp() {
         statusEl.textContent = '🚫 ' + err.message;
     }
 }
-
-setInterval(() => {
-    if (isAppInit && dataArr.length > 0) {
-        console.log(dataArr[dataArr.length - 1]);
-        dataArr.splice(0, dataArr.length);
-    }
-}, 1500);
