@@ -6,7 +6,12 @@ let isAppInit = false;
 const dataArr = [];
 
 async function initCamera() {
-    const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+    const stream = await navigator.mediaDevices.getUserMedia({
+        video: {
+            width: { ideal: 320 },
+            height: { ideal: 240 }
+        }
+    });
     video.srcObject = stream;
     return new Promise(r => video.onloadedmetadata = r);
 }
