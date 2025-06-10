@@ -3,15 +3,11 @@ const canvas = document.getElementById('canvas');
 const ctx = canvas.getContext('2d');
 const statusEl = document.getElementById('status');
 let isAppInit = false;
+let lastTime = 0; // will be necessary to delay
 const dataArr = [];
 
 async function initCamera() {
-    const stream = await navigator.mediaDevices.getUserMedia({
-        video: {
-            width: { ideal: 320 },
-            height: { ideal: 240 }
-        }
-    });
+    const stream = await navigator.mediaDevices.getUserMedia({ video: true });
     video.srcObject = stream;
     return new Promise(r => video.onloadedmetadata = r);
 }
@@ -39,11 +35,18 @@ async function loadClassifier(name, file) {
 let faceCascade, eyeCascade, src, gray;
 const MISS = 6, seen = { L: MISS, R: MISS };
 
-function processFrame() {
+function processFrame(timestamp) {
+    console.log(`Current timestamp: ${timestamp}`); // timestamp automatically passed in 
     if (video.readyState < 2) {
         requestAnimationFrame(processFrame);
         return;
     }
+    if (timestamp - lastTime < 100) { // interval is 500
+        requestAnimationFrame(processFrame);
+        return;
+    }
+
+    lastTime = timestamp; // updates the last time this function runs fully.
 
     ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
     src.data.set(ctx.getImageData(0, 0, src.cols, src.rows).data);
