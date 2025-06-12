@@ -84,3 +84,7 @@ video {
 #webgazerVideoContainer {
     display: none !important;
 }
+
+#video {
+    display: none;
+}

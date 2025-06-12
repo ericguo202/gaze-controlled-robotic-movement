@@ -48,7 +48,21 @@ function processFrame(timestamp) {
 
     lastTime = timestamp; // updates the last time this function runs fully.
 
-    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+    // % of zoom (e.g. 1.5 = 150% zoom, 2 = 200% zoom)
+    const zoomFactor = 2;
+
+    // Source video dimensions
+    const vw = video.videoWidth;
+    const vh = video.videoHeight;
+
+    // Calculate zoom crop box
+    const sw = vw / zoomFactor;
+    const sh = vh / zoomFactor;
+    const sx = (vw - sw) / 2;
+    const sy = (vh - sh) / 2;
+
+
+    ctx.drawImage(video, sx, sy, sw, sh, 0, 0, canvas.width, canvas.height);
     src.data.set(ctx.getImageData(0, 0, src.cols, src.rows).data);
     cv.cvtColor(src, gray, cv.COLOR_RGBA2GRAY);
     cv.equalizeHist(gray, gray);
