@@ -88,7 +88,7 @@ setInterval(() => {
         }
         if (isAppInit && dataArr.length > 0) {
             const cascade = dataArr[dataArr.length - 1];
-            console.log(`Cascade detector: ${cascade}`);
+            // console.log(`Cascade detector: ${cascade}`);
             socket.send(cascade);
             dataArr.splice(0, dataArr.length);
         }

@@ -9,6 +9,7 @@ const dataArr = [];
 async function initCamera() {
     const stream = await navigator.mediaDevices.getUserMedia({ video: true });
     video.srcObject = stream;
+    console.log(`Video ready: ${video.videoWidth}x${video.videoHeight}`);
     return new Promise(r => video.onloadedmetadata = r);
 }
 
@@ -36,7 +37,7 @@ let faceCascade, eyeCascade, src, gray;
 const MISS = 6, seen = { L: MISS, R: MISS };
 
 function processFrame(timestamp) {
-    console.log(`Current timestamp: ${timestamp}`); // timestamp automatically passed in 
+    // console.log(`Current timestamp: ${timestamp}`);
     if (video.readyState < 2) {
         requestAnimationFrame(processFrame);
         return;
@@ -61,7 +62,7 @@ function processFrame(timestamp) {
     const sx = (vw - sw) / 2;
     const sy = (vh - sh) / 2;
 
-
+    console.log({ sx, sy, sw, sh });
     ctx.drawImage(video, sx, sy, sw, sh, 0, 0, canvas.width, canvas.height);
     src.data.set(ctx.getImageData(0, 0, src.cols, src.rows).data);
     cv.cvtColor(src, gray, cv.COLOR_RGBA2GRAY);
