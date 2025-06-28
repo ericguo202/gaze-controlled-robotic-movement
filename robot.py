@@ -31,9 +31,6 @@ def wrench_callback(msg):
     global wrench_force_z
     wrench_force_z = msg.wrench.force.z
 
-
-
-
 def move_down(move_group):
     move_group.set_start_state_to_current_state()
     start_pose = move_group.get_current_pose().pose
@@ -173,6 +170,7 @@ def move_forward(move_group):
 #             plan_traj = plan[1]
 #             gripper.execute(plan_traj, wait=True)
 #             gripper.stop()
+
 def main():
     rospy.init_node('set_full_collision_behavior')
     moveit_commander.roscpp_initialize(sys.argv)
@@ -259,9 +257,6 @@ def main2(value, move_group, listener):
 
 
             rospy.loginfo("############## Task completed! ##############")
-
-
-
 
 if __name__ == '__main__':
     move_group, listener = main()

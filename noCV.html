@@ -4,11 +4,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Websocket Test</title>
+    <title>Eye Gaze Detector</title>
     <link rel="stylesheet" href="stylesheet.css">
 </head>
 
 <body>
+    <!-- grid -->
     <div class="height50">
         <div id="left">LEFT</div>
         <div id="forward">FORWARD <button id="endcalibration">End Calibration</button></div>
@@ -19,9 +20,10 @@
         <div id="backward">BACKWARD</div>
         <div id="down">DOWN</div>
     </div>
+
     <script src="https://webgazer.cs.brown.edu/webgazer.js"></script> <!--Webgazer.js script-->
     <!--Websocket script with webgazer-->
-    <script src="collectdata.js"></script>
+    <script src="collectdataNoCV.js"></script>
 </body>
 
 </html>
