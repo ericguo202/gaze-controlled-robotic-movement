@@ -10,18 +10,25 @@
 
 <body>
     <!-- grid -->
-    <div class="height50">
-        <div id="left">LEFT</div>
-        <div id="forward">FORWARD <button id="endcalibration">End Calibration</button></div>
-        <div id="up">UP</div>
-    </div>
-    <div class="height50">
-        <div id="right">RIGHT</div>
-        <div id="backward">BACKWARD</div>
-        <div id="down">DOWN</div>
-    </div>
+    <main class="background">
+        <video id="robotVideo" autoplay muted playsinline></video>
+        <div class="overlay-content">
+            <div class="height50">
+                <div id="left">LEFT</div>
+                <div id="forward">FORWARD <button id="endcalibration">End Calibration</button></div>
+                <div id="up">UP</div>
+            </div>
+            <div class="height50">
+                <div id="right">RIGHT</div>
+                <div id="backward">BACKWARD</div>
+                <div id="down">DOWN</div>
+            </div>
+        </div>
+    </main>
 
     <script src="https://webgazer.cs.brown.edu/webgazer.js"></script> <!--Webgazer.js script-->
+    <!--Overlay camera feed script-->
+    <script src="overlayCameraFeed.js"></script>
     <!--Websocket script with webgazer-->
     <script src="collectdataNoCV.js"></script>
 </body>
