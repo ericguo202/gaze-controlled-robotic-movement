@@ -56,6 +56,7 @@ function determineQuadrant(gaze) {
 // test
 let endCalibration = false; // default state is calibration
 let gaze = null;
+let lastAction = null; // last recorded action (left, forward, etc.)
 
 webgazer.setGazeListener((data, elapsedTime) => {
     if (data) {
@@ -82,6 +83,13 @@ endCalibrationButton.addEventListener("click", (event) => {
 setInterval(() => {
     if (gaze && socket.readyState === WebSocket.OPEN && endCalibration) {
         console.log(gaze);
-        socket.send(determineQuadrant(gaze)); // sends to server
+        const action = determineQuadrant(gaze);
+        console.log(`Last action: ${lastAction}, New action: ${action}`);
+        // to prevent unwanted actions while eye is traveling across screen
+        if (action === lastAction) {
+            socket.send(action);
+            console.log("Gaze data sent to server");
+        }
+        lastAction = action;
     }
 }, 2000);
